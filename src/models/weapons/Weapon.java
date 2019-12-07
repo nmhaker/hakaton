@@ -10,13 +10,11 @@ import constants.WeaponType;
         include = JsonTypeInfo.As.PROPERTY,
         property = "type")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = ArrowWeapon.class, name = "ARROW"),
-        @JsonSubTypes.Type(value = ShieldWeapon.class, name = "SHIELD"),
-        @JsonSubTypes.Type(value = SwordWeapon.class, name = "SWORD")
+        @JsonSubTypes.Type(value = ArrowWeapon.class, name = "Arrow"),
+        @JsonSubTypes.Type(value = ShieldWeapon.class, name = "Shield"),
+        @JsonSubTypes.Type(value = SwordWeapon.class, name = "Sword")
 
 })
 public abstract class Weapon {
-    public String type;
-
-
+    public abstract String getType();
 }

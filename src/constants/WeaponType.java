@@ -2,9 +2,9 @@ package constants;
 
 public class WeaponType {
 
-    public static String ARROW = "ARROW";
+    public static String ARROW = "Arrow";
 
-    public static String SHIELD = "SHIELD";
+    public static String SHIELD = "Shield";
 
-    public static String SWORD = "SWORD";
+    public static String SWORD = "Sword";
 }

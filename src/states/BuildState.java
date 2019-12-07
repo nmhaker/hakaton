@@ -28,12 +28,11 @@ public class BuildState extends State {
         GET_3_METAL,
         GET_2_WOOD_INITIAL,
         GET_2_WOOD,
-        MOVE_TO_FORTRESS,
         BUILD_FORTRESS_SWORD,
         GET_4_STONE_INITIAL,
         GET_4_STONE,
         BUILD_HOUSE,
-        DROP_1_WOOD
+        MOVE_TO_SWORD_FORTRESS_2
     }
 
     BuildSubStates buildSubState = BuildSubStates.GET3_STONES_INITIAL;
@@ -114,22 +113,53 @@ public class BuildState extends State {
                     Command dd = PathHelper.getNextMove(woodShop.item.x, woodShop.item.y);
                     return dd.getCommandCode();
                 } else {
-                    Direction d = Helpers.directionTo(ItemType.METAL_SHOP);
+                    Direction d = Helpers.directionTo(ItemType.WOOD_SHOP);
                     Command ret = new TakeResourceCommand(d);
                     if (Helpers.GetNumberOfWood() == 1) {
-                        buildSubState = BuildSubStates.MOVE_TO_FORTRESS;
+                        buildSubState = BuildSubStates.BUILD_FORTRESS_SWORD;
                     }
                     return ret.getCommandCode();
                 }
-            case MOVE_TO_FORTRESS:
+            case BUILD_FORTRESS_SWORD:
                 Tile fortress1 = Helpers.GetNearestItem(ItemType.FORTRESS);
                 if(!Helpers.nextToItem(ItemType.FORTRESS)) {
                     Command houseD1 = PathHelper.getNextMove(fortress1.item.x, fortress1.item.y );
                     return houseD1.getCommandCode();
                 } else {
                     Direction fortD1 = Helpers.directionTo(ItemType.FORTRESS);
-                    Command fortRet = new TakeWeaponCommand(fortD1);
+                    Command fortRet = new BuildCommand(fortD1, Building.SWORD_FORTRESS);
+                    buildSubState = BuildSubStates.GET_4_STONE_INITIAL;
+                    return fortRet.getCommandCode();
+                }
+            case GET_4_STONE_INITIAL:
+                stoneShop = Helpers.GetNearestItem(ItemType.STONE_SHOP);
+                buildSubState = BuildSubStates.GET_4_STONE;
+            case GET_4_STONE:
+                if(!Helpers.nextToItem(ItemType.STONE_SHOP)) {
+                    Command dd = PathHelper.getNextMove(stoneShop.item.x, stoneShop.item.y);
+                    return dd.getCommandCode();
+                } else {
+                    Direction d = Helpers.directionTo(ItemType.STONE_SHOP);
+                    Command ret = new TakeResourceCommand(d);
+                    if(Helpers.GetNumberOfStone() == 3) {
+                        buildSubState = BuildSubStates.BUILD_HOUSE;
+                    }
+                    return ret.getCommandCode();
+                }
+            case BUILD_HOUSE:
+                Direction freeD = Helpers.GetFreeTileDirection();
+                buildSubState = BuildSubStates.MOVE_TO_SWORD_FORTRESS_2;
+                return new BuildCommand(freeD, Building.HOUSE).getCommandCode();
+            case MOVE_TO_SWORD_FORTRESS_2:
+                Tile swFortress2 = Helpers.GetNearestItem(ItemType.SWORD_FORTRESS);
+                if(!Helpers.nextToItem(ItemType.SWORD_FORTRESS)) {
+                    Command houseD = PathHelper.getNextMove(swFortress2.item.x, swFortress2.item.y );
+                    return houseD.getCommandCode();
+                } else {
+                    Direction fortD = Helpers.directionTo(ItemType.SWORD_FORTRESS);
+                    Command fortRet = new TakeWeaponCommand(fortD);
                     buildSubState = BuildSubStates.GET_3_METAL_INITIAL;
+                    bot.changeState(StateEnum.RETREAT);
                     return fortRet.getCommandCode();
                 }
         }

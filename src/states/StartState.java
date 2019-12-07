@@ -165,8 +165,7 @@ public class StartState extends State {
                 startSubState = StartSubState.LOOPSEAMLESS;
                 return new BuildCommand(freeD2, Building.HOUSE).getCommandCode();
             case LOOPSEAMLESS:
-                Direction tmp = Helpers.GetFreeTileDirection();
-                return new MoveCommand(tmp).getCommandCode();
+                bot.changeState(StateEnum.ATTACK);
         }
         return null;
     }

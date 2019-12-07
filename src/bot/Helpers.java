@@ -212,6 +212,11 @@ public class Helpers {
            if( playerX+1 <= 24 && tiles[playerY][playerX+1].item != null && tiles[playerY][playerX+1].item.GetItemType().equals(FORTRESS)) return true;
            if( playerY-1 >= 0 && tiles[playerY-1][playerX].item != null && tiles[playerY-1][playerX].item.GetItemType().equals(FORTRESS)) return true;
            if( playerY+1 <= 19 && tiles[playerY+1][playerX].item != null && tiles[playerY+1][playerX].item.GetItemType().equals(FORTRESS)) return true;
+       }else if (itemType.equals(SWORD_FORTRESS)) {
+           if( playerX-1 >= 0 && tiles[playerY][playerX-1].item != null && tiles[playerY][playerX-1].item.GetItemType().equals(SWORD_FORTRESS)) return true;
+           if( playerX+1 <= 24 && tiles[playerY][playerX+1].item != null && tiles[playerY][playerX+1].item.GetItemType().equals(SWORD_FORTRESS)) return true;
+           if( playerY-1 >= 0 && tiles[playerY-1][playerX].item != null && tiles[playerY-1][playerX].item.GetItemType().equals(SWORD_FORTRESS)) return true;
+           if( playerY+1 <= 19 && tiles[playerY+1][playerX].item != null && tiles[playerY+1][playerX].item.GetItemType().equals(SWORD_FORTRESS)) return true;
        }
        return false;
     }
@@ -248,7 +253,12 @@ public class Helpers {
             if( playerX+1 <= 24 && tiles[playerY][playerX+1].item != null && tiles[playerY][playerX+1].item.GetItemType().equals(FORTRESS)) return Direction.RIGHT;
             if( playerY-1 >= 0 && tiles[playerY-1][playerX].item != null && tiles[playerY-1][playerX].item.GetItemType().equals(FORTRESS)) return Direction.UP;
             if( playerY+1 <= 19 && tiles[playerY+1][playerX].item != null && tiles[playerY+1][playerX].item.GetItemType().equals(FORTRESS)) return Direction.DOWN;
-        }else {
+        }else if (itemType.equals(SWORD_FORTRESS)) {
+            if( playerX-1 >= 0 && tiles[playerY][playerX-1].item != null && tiles[playerY][playerX-1].item.GetItemType().equals(FORTRESS)) return Direction.LEFT;
+            if( playerX+1 <= 24 && tiles[playerY][playerX+1].item != null && tiles[playerY][playerX+1].item.GetItemType().equals(FORTRESS)) return Direction.RIGHT;
+            if( playerY-1 >= 0 && tiles[playerY-1][playerX].item != null && tiles[playerY-1][playerX].item.GetItemType().equals(FORTRESS)) return Direction.UP;
+            if( playerY+1 <= 19 && tiles[playerY+1][playerX].item != null && tiles[playerY+1][playerX].item.GetItemType().equals(FORTRESS)) return Direction.DOWN;
+        } else {
             System.out.println("Greska, nije nigde oko tebe!");
         }
         return Direction.DOWN;
@@ -362,12 +372,12 @@ public class Helpers {
 
 
     public static int getWeaponPower(Weapon weapon) {
-        if (weapon != null && WeaponType.SWORD == weapon.type) {
+        if (weapon != null && WeaponType.SWORD == weapon.getType()) {
             SwordWeapon sword = (SwordWeapon)weapon;
             return sword.swings * 10;
         }
 
-        if (weapon != null && WeaponType.ARROW == weapon.type) {
+        if (weapon != null && WeaponType.ARROW == weapon.getType()) {
             ArrowWeapon arrow = (ArrowWeapon)weapon;
             return arrow.num_of_arrows * 5;
         }

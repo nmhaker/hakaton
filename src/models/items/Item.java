@@ -6,6 +6,7 @@ import constants.ItemType;
 import models.items.fortresses.ArrowFortress;
 import models.items.fortresses.Fortress;
 import models.items.fortresses.ShieldFortress;
+import models.items.fortresses.SwordFortress;
 import models.items.shops.MetalShop;
 import models.items.shops.StoneShop;
 import models.items.shops.WoodShop;
@@ -20,7 +21,7 @@ import models.items.shops.WoodShop;
         @JsonSubTypes.Type(value = StoneShop.class, name = "STONE_SHOP"),
         @JsonSubTypes.Type(value = ArrowFortress.class, name = "ARROW_FORTRESS"),
         @JsonSubTypes.Type(value = ShieldFortress.class, name = "SHIELD_FORTRESS"),
-        @JsonSubTypes.Type(value = ShieldFortress.class, name = "SWORD_FORTRESS"),
+        @JsonSubTypes.Type(value = SwordFortress.class, name = "SWORD_FORTRESS"),
         @JsonSubTypes.Type(value = Fortress.class, name = "FORTRESS"),
         @JsonSubTypes.Type(value = House.class, name = "HOUSE")
 })
