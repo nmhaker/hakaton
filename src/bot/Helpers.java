@@ -68,7 +68,7 @@ public class Helpers {
         }
         return nearestStore;
     }
-
+    
     public static Tile GetNearestStoreForLowerRightPlayer(String storeType){
 
         if(storeType != ItemType.METAL_SHOP && storeType != ItemType.WOOD_SHOP && storeType != ItemType.STONE_SHOP){

@@ -46,7 +46,7 @@ public class Bot {
         } else {
             game = gameManager.gamePlay(playerID, gameID);
         }
-        state = new StartState();
+        state = StartState.getInstance();
         while(game.result.winner == null){
             //decide move
             String action = state.chooseAction();
