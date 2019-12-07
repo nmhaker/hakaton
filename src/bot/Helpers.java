@@ -110,20 +110,20 @@ public class Helpers {
        int playerY = player.y;
 
        if (itemType.equals(METAL_SHOP)) {
-           if( playerX-1 >= 0 && tiles[playerX-1][playerY].item.itemType.equals(METAL_SHOP)) return true;
-           if( playerX+1 <= 24 && tiles[playerX+1][playerY].item.itemType.equals(METAL_SHOP)) return true;
-           if( playerY-1 >= 0 && tiles[playerX][playerY-1].item.itemType.equals(METAL_SHOP)) return true;
-           if( playerY+1 <= 19 && tiles[playerX][playerY+1].item.itemType.equals(METAL_SHOP)) return true;
+           if( playerX-1 >= 0 && tiles[playerX-1][playerY].item.GetItemType().equals(METAL_SHOP)) return true;
+           if( playerX+1 <= 24 && tiles[playerX+1][playerY].item.GetItemType().equals(METAL_SHOP)) return true;
+           if( playerY-1 >= 0 && tiles[playerX][playerY-1].item.GetItemType().equals(METAL_SHOP)) return true;
+           if( playerY+1 <= 19 && tiles[playerX][playerY+1].item.GetItemType().equals(METAL_SHOP)) return true;
        } else if (itemType.equals(STONE_SHOP)) {
-           if( playerX-1 >= 0 && tiles[playerX-1][playerY].item.itemType.equals(STONE_SHOP)) return true;
-           if( playerX+1 <= 24 && tiles[playerX+1][playerY].item.itemType.equals(STONE_SHOP)) return true;
-           if( playerY-1 >= 0 && tiles[playerX][playerY-1].item.itemType.equals(STONE_SHOP)) return true;
-           if( playerY+1 <= 19 && tiles[playerX][playerY+1].item.itemType.equals(STONE_SHOP)) return true;
+           if( playerX-1 >= 0 && tiles[playerX-1][playerY].item.GetItemType().equals(STONE_SHOP)) return true;
+           if( playerX+1 <= 24 && tiles[playerX+1][playerY].item.GetItemType().equals(STONE_SHOP)) return true;
+           if( playerY-1 >= 0 && tiles[playerX][playerY-1].item.GetItemType().equals(STONE_SHOP)) return true;
+           if( playerY+1 <= 19 && tiles[playerX][playerY+1].item.GetItemType().equals(STONE_SHOP)) return true;
        } else if (itemType.equals(WOOD_SHOP)) {
-           if( playerX-1 >= 0 && tiles[playerX-1][playerY].item.itemType.equals(WOOD_SHOP)) return true;
-           if( playerX+1 <= 24 && tiles[playerX+1][playerY].item.itemType.equals(WOOD_SHOP)) return true;
-           if( playerY-1 >= 0 && tiles[playerX][playerY-1].item.itemType.equals(WOOD_SHOP)) return true;
-           if( playerY+1 <= 19 && tiles[playerX][playerY+1].item.itemType.equals(WOOD_SHOP)) return true;
+           if( playerX-1 >= 0 && tiles[playerX-1][playerY].item.GetItemType().equals(WOOD_SHOP)) return true;
+           if( playerX+1 <= 24 && tiles[playerX+1][playerY].item.GetItemType().equals(WOOD_SHOP)) return true;
+           if( playerY-1 >= 0 && tiles[playerX][playerY-1].item.GetItemType().equals(WOOD_SHOP)) return true;
+           if( playerY+1 <= 19 && tiles[playerX][playerY+1].item.GetItemType().equals(WOOD_SHOP)) return true;
        }
        return false;
     }
@@ -136,20 +136,20 @@ public class Helpers {
         int playerY = player.y;
 
         if (itemType.equals(METAL_SHOP)) {
-            if( playerX-1 >= 0 && tiles[playerX-1][playerY].item.itemType.equals(METAL_SHOP)) return Direction.LEFT;
-            if( playerX+1 <= 24 && tiles[playerX+1][playerY].item.itemType.equals(METAL_SHOP)) return Direction.RIGHT;
-            if( playerY-1 >= 0 && tiles[playerX][playerY-1].item.itemType.equals(METAL_SHOP)) return Direction.UP;
-            if( playerY+1 <= 19 && tiles[playerX][playerY+1].item.itemType.equals(METAL_SHOP)) return Direction.DOWN;
+            if( playerX-1 >= 0 && tiles[playerX-1][playerY].item.GetItemType().equals(METAL_SHOP)) return Direction.LEFT;
+            if( playerX+1 <= 24 && tiles[playerX+1][playerY].item.GetItemType().equals(METAL_SHOP)) return Direction.RIGHT;
+            if( playerY-1 >= 0 && tiles[playerX][playerY-1].item.GetItemType().equals(METAL_SHOP)) return Direction.UP;
+            if( playerY+1 <= 19 && tiles[playerX][playerY+1].item.GetItemType().equals(METAL_SHOP)) return Direction.DOWN;
         } else if (itemType.equals(STONE_SHOP)) {
-            if( playerX-1 >= 0 && tiles[playerX-1][playerY].item.itemType.equals(STONE_SHOP)) return Direction.LEFT;
-            if( playerX+1 <= 24 && tiles[playerX+1][playerY].item.itemType.equals(STONE_SHOP)) return  Direction.RIGHT;
-            if( playerY-1 >= 0 && tiles[playerX][playerY-1].item.itemType.equals(STONE_SHOP)) return Direction.UP;
-            if( playerY+1 <= 19 && tiles[playerX][playerY+1].item.itemType.equals(STONE_SHOP)) return Direction.DOWN;
+            if( playerX-1 >= 0 && tiles[playerX-1][playerY].item.GetItemType().equals(STONE_SHOP)) return Direction.LEFT;
+            if( playerX+1 <= 24 && tiles[playerX+1][playerY].item.GetItemType().equals(STONE_SHOP)) return  Direction.RIGHT;
+            if( playerY-1 >= 0 && tiles[playerX][playerY-1].item.GetItemType().equals(STONE_SHOP)) return Direction.UP;
+            if( playerY+1 <= 19 && tiles[playerX][playerY+1].item.GetItemType().equals(STONE_SHOP)) return Direction.DOWN;
         } else if (itemType.equals(WOOD_SHOP)) {
-            if( playerX-1 >= 0 && tiles[playerX-1][playerY].item.itemType.equals(WOOD_SHOP)) return Direction.LEFT;
-            if( playerX+1 <= 24 && tiles[playerX+1][playerY].item.itemType.equals(WOOD_SHOP)) return Direction.RIGHT;
-            if( playerY-1 >= 0 && tiles[playerX][playerY-1].item.itemType.equals(WOOD_SHOP)) return Direction.UP;
-            if( playerY+1 <= 19 && tiles[playerX][playerY+1].item.itemType.equals(WOOD_SHOP)) return Direction.DOWN;
+            if( playerX-1 >= 0 && tiles[playerX-1][playerY].item.GetItemType().equals(WOOD_SHOP)) return Direction.LEFT;
+            if( playerX+1 <= 24 && tiles[playerX+1][playerY].item.GetItemType().equals(WOOD_SHOP)) return Direction.RIGHT;
+            if( playerY-1 >= 0 && tiles[playerX][playerY-1].item.GetItemType().equals(WOOD_SHOP)) return Direction.UP;
+            if( playerY+1 <= 19 && tiles[playerX][playerY+1].item.GetItemType().equals(WOOD_SHOP)) return Direction.DOWN;
         } else {
             System.out.println("Greska, nije nigde oko tebe!");
         }
