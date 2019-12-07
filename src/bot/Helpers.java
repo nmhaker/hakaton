@@ -1,12 +1,23 @@
 package bot;
 
 import models.Game;
+import models.items.Item;
 
 public class Helpers {
 
-    private Game game;
+    public static Item[] GetStoresOnMySide(Game game){
 
-    public Helpers(Game g) {
-        game = g;
+        boolean isUpperLeftPlayer = game.playerIndex == 0;
+
+        for (item:game.result.map.tiles) {
+            if()
+        }
+        return null;
+    }
+
+    boolean IsTileOnMySide(Item item, boolean isUpperLeftPlayer){
+        if(isUpperLeftPlayer){
+            
+        }
     }
 }

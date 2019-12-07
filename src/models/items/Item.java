@@ -2,7 +2,7 @@ package models.items;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import models.House;
+import constants.ItemType;
 import models.items.fortresses.ArrowFortress;
 import models.items.fortresses.Fortress;
 import models.items.fortresses.ShieldFortress;
@@ -24,5 +24,11 @@ import models.items.shops.WoodShop;
         @JsonSubTypes.Type(value = House.class, name = "HOUSE")
 })
 public abstract class Item {
+
+    public Integer x;
+
+    public Integer y;
+
+    public String itemType = ItemType.METAL_SHOP;
 
 }

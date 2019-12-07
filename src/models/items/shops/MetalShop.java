@@ -7,10 +7,6 @@ public class MetalShop extends Item {
 
     public Integer value;
 
-    public Integer x;
-
-    public Integer y;
-
     public boolean empty;
 
     public String itemType = ItemType.METAL_SHOP;

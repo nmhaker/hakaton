@@ -4,11 +4,8 @@ import constants.ItemType;
 import models.items.Item;
 
 public class SwordFortress extends Item {
+
     public Integer id;
-
-    public Integer x;
-
-    public Integer y;
 
     public Integer health;
 

@@ -7,10 +7,6 @@ public class ArrowFortress extends Item {
 
     public Integer id;
 
-    public Integer x;
-
-    public Integer y;
-
     public Integer health;
 
     public Integer timeSinceBuilding;
