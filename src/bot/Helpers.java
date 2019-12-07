@@ -173,4 +173,18 @@ public class Helpers {
     public static Player returnEnemy(){
         return game.result.player1.id != playerID ? game.result.player1 : game.result.player2;
     }
+
+    public long getEnemyDistance(){
+
+        Player player = game.result.player1.id == playerID ? game.result.player1 : game.result.player2;
+        Player playerOther = game.result.player1.id != playerID ? game.result.player1 : game.result.player2;
+
+        int player1_x = player.x;
+        int player1_y = player.y;
+
+        int player2_x = playerOther.x;
+        int player2_y = playerOther.y;
+
+        return Math.round(Math.sqrt((Math.pow((player1_x-player2_x), 2))+(Math.pow((player1_y-player2_y), 2))));
+    }
 }
