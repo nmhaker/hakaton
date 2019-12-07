@@ -94,7 +94,8 @@ public class PathHelper {    public static  class Coordinate {
     }
 
     public static boolean freeField(Tile[][] tiles, int y, int x) {
-        return !tiles[y][x].entity && !tiles[y][x].shop && !tiles[y][x].buildingInProcess && tiles[y][x].item == null;
+        Player enemy = Helpers.returnEnemy();
+        return !tiles[y][x].entity && !tiles[y][x].shop && !tiles[y][x].buildingInProcess && tiles[y][x].item == null && (enemy.y != y || enemy.x != x);
     }
     private static Command xBarrier(Game game, int cx, int cy, int dy) {
         if (dy > 0 && !game.result.map.tiles[cy-1][cx].entity)

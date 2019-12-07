@@ -3,6 +3,7 @@ package models.weapons;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import constants.WeaponType;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -15,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 })
 public abstract class Weapon {
+    public String type;
 
 
 }

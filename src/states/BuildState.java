@@ -4,10 +4,10 @@ import bot.Helpers;
 
 public class BuildState extends State {
 
-    private int remainingWood;
-    private int remainingStone;
-    private int remainingMetal;
-    private int nextBuilding;
+//    private int remainingWood;
+//    private int remainingStone;
+//    private int remainingMetal;
+//    private int nextBuilding;
     enum BuildSubStates {
         GET_3_STONES,
         GET_2_WOODS,
@@ -27,12 +27,12 @@ public class BuildState extends State {
     private BuildState() {}
 
     public static BuildState getInstance()
-    {.
+    {
         if (build_state == null)
             build_state = new BuildState();
 
         return build_state;
-    }..
+    }
     @Override
     public String chooseAction() {
         if(threat()){

@@ -4,8 +4,6 @@ import constants.WeaponType;
 
 public class ShieldWeapon extends Weapon {
 
-    public String type = WeaponType.SHIELD;
-
     public Integer health;
 
 }

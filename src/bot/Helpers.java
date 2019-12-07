@@ -3,11 +3,16 @@ package bot;
 import java.util.ArrayList;
 import constants.ItemType;
 import constants.MapSize;
+import constants.WeaponType;
 import models.Game;
 import models.Tile;
 import models.items.Item;
 import models.Player;
 import commands.enums.Direction;
+import models.weapons.ArrowWeapon;
+import models.weapons.SwordWeapon;
+import models.weapons.Weapon;
+
 import static constants.ItemType.*;
 
 public class Helpers {
@@ -245,6 +250,21 @@ public class Helpers {
         return game.result.player1.id != playerID ? game.result.player1 : game.result.player2;
     }
 
+    public static boolean EnemyReachableWithSword() {
+        Player me = returnMe();
+        Player enemy = returnEnemy();
+
+        if (me.x == enemy.x && ((me.y == enemy.y - 1) || (me.y == enemy.y + 1))) {
+            return true;
+        }
+
+        if (me.y == enemy.y && ((me.x == enemy.x - 1) || (me.x == enemy.x + 1))) {
+            return true;
+        }
+
+        return false;
+    }
+
     public long getEnemyDistance() {
 
         Player player = game.result.player1.id == playerID ? game.result.player1 : game.result.player2;
@@ -269,5 +289,65 @@ public class Helpers {
     }
     public static int GetNumberOfMetal(){
         return returnMe().resources.METAL;
+    }
+
+    public static boolean EnemyReachableWithArrows() {
+        Player me = returnMe();
+        Player enemy = returnEnemy();
+
+        return false;
+    }
+
+
+    public static int getEnemyDistanceInSteps() {
+        Player me = returnMe();
+        Player enemy = returnEnemy();
+
+        return Math.abs(me.x - enemy.x) + Math.abs(me.y - enemy.y);
+    }
+
+    public static int getEnemyAttackingPower() {
+        Player enemy = returnEnemy();
+        int power = 0;
+
+        power += getWeaponPower(enemy.weapon1);
+        power += getWeaponPower(enemy.weapon2);
+        return power;
+    }
+
+    public static int getMyAttackingPower() {
+        Player me = returnMe();
+        int power = 0;
+
+        power += getWeaponPower(me.weapon1);
+        power += getWeaponPower(me.weapon2);
+        return power;
+    }
+
+
+    public static int getWeaponPower(Weapon weapon) {
+        if (weapon != null && WeaponType.SWORD == weapon.type) {
+            SwordWeapon sword = (SwordWeapon)weapon;
+            return sword.swings * 10;
+        }
+
+        if (weapon != null && WeaponType.ARROW == weapon.type) {
+            ArrowWeapon arrow = (ArrowWeapon)weapon;
+            return arrow.num_of_arrows * 5;
+        }
+
+        return 0;
+    }
+
+    public static boolean assessEnemyDanger() {
+        int distance = getEnemyDistanceInSteps();
+
+        if (distance <= 5) {
+            if (getEnemyAttackingPower() >= 50) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
