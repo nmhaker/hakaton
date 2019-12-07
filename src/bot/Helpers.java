@@ -9,6 +9,9 @@ import models.Tile;
 import models.items.Item;
 import models.Player;
 import commands.enums.Direction;
+import models.items.shops.MetalShop;
+import models.items.shops.StoneShop;
+import models.items.shops.WoodShop;
 import models.weapons.ArrowWeapon;
 import models.weapons.SwordWeapon;
 import models.weapons.Weapon;
@@ -383,4 +386,40 @@ public class Helpers {
 
         return false;
     }
+
+    public static boolean doesNearestShopHasResources(String tileType, int numOfResources) {
+        double minDist = 25, currentDistance;
+        Tile nearestTile = null;
+        ArrayList<Tile> stores;
+        if(!tileType.equals(WOOD_SHOP) && !tileType.equals(METAL_SHOP) &&!tileType.equals(STONE_SHOP)){
+            System.out.println("GRESKA Zahtevan NON-STORE objekat");
+            //System.exit(1);
+            return false;
+        }
+        stores = GetStores();
+        for (Tile tile : stores) {
+            currentDistance = RelativeDistance(tile);
+            if( tile.item.GetItemType().equals(tileType) && currentDistance < minDist) {
+                minDist = currentDistance;
+                nearestTile = tile;
+            }
+        }
+        if(tileType.equals(WOOD_SHOP)){
+            WoodShop ws = (WoodShop)nearestTile.item;
+            if(ws.value == numOfResources) return true;
+            else return false;
+        }else if(tileType.equals(METAL_SHOP)){
+            MetalShop ms = (MetalShop)nearestTile.item;
+            if(ms.value == numOfResources) return true;
+            else return false;
+        }else if(tileType.equals(STONE_SHOP)) {
+            StoneShop sh = (StoneShop)nearestTile.item;
+            if(sh.value == numOfResources) return true;
+            else return false;
+        }
+        System.out.println("Neka greska velika: 420: doesNearestShopHasResources");
+        return false;
+    }
+
+
 }
