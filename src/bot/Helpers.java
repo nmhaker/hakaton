@@ -97,7 +97,17 @@ public class Helpers {
     }
 
     public static double RelativeDistance(Tile tile){
-        return Math.sqrt((Math.pow((0-tile.item.x), 2))+(Math.pow((0-tile.item.y), 2)));
+        int x =  returnMe().x;
+        int y =  returnMe().y;
+        return Math.sqrt((Math.pow((x-tile.item.x), 2))+(Math.pow((y-tile.item.y), 2)));
+    }
+
+    public static double DistanceToEnemy(){
+        int x =  returnMe().x;
+        int y =  returnMe().y;
+        int eX =  returnEnemy().x;
+        int eY =  returnEnemy().y;
+        return Math.sqrt((Math.pow((x-eX), 2))+(Math.pow((y-eY), 2)));
     }
 
     public static int playerID;
@@ -156,11 +166,11 @@ public class Helpers {
         return Direction.DOWN;
     }
 
-    public Player returnMe(){
+    public static Player returnMe(){
         return game.result.player1.id == playerID ? game.result.player1 : game.result.player2;
     }
 
-    public Player returnEnemy(){
+    public static Player returnEnemy(){
         return game.result.player1.id != playerID ? game.result.player1 : game.result.player2;
     }
 }
