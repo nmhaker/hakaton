@@ -29,6 +29,5 @@ public abstract class Item {
 
     public Integer y;
 
-    public String itemType = ItemType.METAL_SHOP;
-
+    public abstract String GetItemType();
 }

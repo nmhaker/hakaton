@@ -10,4 +10,9 @@ public class Fortress extends Item {
     public Integer health;
 
     public String itemType = ItemType.FORTRESS;
+
+    public String GetItemType(){
+        return itemType;
+    }
+
 }

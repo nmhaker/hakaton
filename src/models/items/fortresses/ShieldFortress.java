@@ -17,4 +17,9 @@ public class ShieldFortress extends Item {
     public String itemType = ItemType.SHIELD_FORTRESS;
 
     public String stringType;
+
+    public String GetItemType(){
+        return itemType;
+    }
+
 }

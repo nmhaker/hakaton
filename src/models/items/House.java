@@ -10,4 +10,9 @@ public class House extends Item {
     public Integer health;
 
     public String itemType = ItemType.HOUSE;
+
+    public String GetItemType(){
+        return itemType;
+    }
+
 }

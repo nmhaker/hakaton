@@ -18,4 +18,8 @@ public class SwordFortress extends Item {
     public String itemType = ItemType.SWORD_FORTRESS;
 
     public String stringType;
+
+    public String GetItemType(){
+        return itemType;
+    }
 }

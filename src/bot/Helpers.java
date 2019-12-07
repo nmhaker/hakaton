@@ -61,7 +61,7 @@ public class Helpers {
 
         for (Tile tile : stores) {
             currentDistance = UpperLeftDistance(tile);
-            if( tile.item.itemType.equals(storeType) && currentDistance < nearestDistance) {
+            if( tile.item.GetItemType().equals(storeType) && currentDistance < nearestDistance) {
                 nearestDistance = currentDistance;
                 nearestStore = tile;
             }
@@ -80,7 +80,7 @@ public class Helpers {
 
         for (Tile tile : stores) {
             currentDistance = LowerRightDistance(tile);
-            if( tile.item.itemType.equals(storeType) && currentDistance < nearestDistance) {
+            if( tile.item.GetItemType().equals(storeType) && currentDistance < nearestDistance) {
                 nearestDistance = currentDistance;
                 nearestStore = tile;
             }
@@ -89,11 +89,15 @@ public class Helpers {
     }
 
     public static double UpperLeftDistance(Tile tile){
-        return Math.sqrt((Math.pow((0-tile.item.x), 2))+(Math.pow((0-tile.item.x), 2)));
+        return Math.sqrt((Math.pow((0-tile.item.x), 2))+(Math.pow((0-tile.item.y), 2)));
     }
 
     public static double LowerRightDistance(Tile tile){
-        return Math.sqrt((Math.pow((MapSize.HEIGHT_LAST_INDEX -tile.item.x), 2))+(Math.pow((MapSize.WIDTH_LAST_INDEX-tile.item.x), 2)));
+        return Math.sqrt((Math.pow((MapSize.WIDTH_LAST_INDEX -tile.item.x), 2))+(Math.pow((MapSize.HEIGHT_LAST_INDEX-tile.item.y), 2)));
+    }
+
+    public static double RelativeDistance(Tile tile){
+        return Math.sqrt((Math.pow((0-tile.item.x), 2))+(Math.pow((0-tile.item.y), 2)));
     }
 
     public static int playerID;
