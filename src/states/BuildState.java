@@ -1,6 +1,7 @@
 package states;
 
 import bot.Helpers;
+import bot.Bot;
 
 public class BuildState extends State {
 
@@ -24,12 +25,12 @@ public class BuildState extends State {
     BuildSubStates buildSubState = BuildSubStates.GET_3_STONES;
 
     private static BuildState build_state = null;
-    private BuildState() {}
+    private BuildState(Bot bot) { this.bot = bot; }
 
-    public static BuildState getInstance()
+    public static BuildState getInstance(Bot bot)
     {
         if (build_state == null)
-            build_state = new BuildState();
+            build_state = new BuildState(bot);
 
         return build_state;
     }

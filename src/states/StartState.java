@@ -1,5 +1,6 @@
 package states;
 
+import bot.Bot;
 import bot.Helpers;
 import bot.PathHelper;
 import commands.BuildCommand;
@@ -43,12 +44,12 @@ public class StartState extends State {
     private Tile metalShop;
     private Tile woodShop1;
 
-    private StartState() {}
+    private StartState(Bot bot) { this.bot = bot;}
 
-    public static StartState getInstance()
+    public static StartState getInstance(Bot bot)
     {
         if (start_state == null)
-            start_state = new StartState();
+            start_state = new StartState(bot);
 
         return start_state;
     }

@@ -1,11 +1,14 @@
 package states;
 
+import bot.Bot;
+import bot.Helpers;
+
 public abstract class State {
 
+    protected Bot bot;
     public abstract String chooseAction();
 
     public boolean threat(){
-        // check if enemy player is closer then 5 spots. Change state to attack or retreat.
-        return true;
+        return Helpers.assessEnemyDanger();
     }
 }

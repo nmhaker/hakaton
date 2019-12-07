@@ -1,14 +1,16 @@
 package states;
 
+import bot.Bot;
+
 public class RetreatState extends State {
 
     private static RetreatState retreat_state = null;
-    private RetreatState() {}
+    private RetreatState(Bot bot) { this.bot = bot;}
 
-    public static RetreatState getInstance()
+    public static RetreatState getInstance(Bot bot)
     {
         if (retreat_state == null)
-            retreat_state = new RetreatState();
+            retreat_state = new RetreatState(bot);
 
         return retreat_state;
     }

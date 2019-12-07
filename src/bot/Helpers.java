@@ -136,6 +136,25 @@ public class Helpers {
 
     }
 
+    public static Item GetNearestEnemyBuilding() {
+        Player enemy = returnEnemy();
+        if (enemy.buildings.length == 0) return null;
+
+        double minDistance = Double.MAX_VALUE;
+        int minInd = -1;
+        for(int i = 0; i < enemy.buildings.length; i++)
+        {
+            Tile tile = new Tile();
+            tile.item = enemy.buildings[i];
+            double currentDistance = RelativeDistance(tile);
+            if (currentDistance < minDistance)
+                minDistance= currentDistance;
+                minInd = i;
+        }
+
+        return enemy.buildings[minInd];
+    }
+
     public static double UpperLeftDistance(Tile tile){
         return Math.sqrt((Math.pow((0-tile.item.x), 2))+(Math.pow((0-tile.item.y), 2)));
     }
@@ -265,7 +284,21 @@ public class Helpers {
         return false;
     }
 
-    public long getEnemyDistance() {
+    public static boolean EnemyBuildingReachableBySword(Item attackingBuilding) {
+        Player me = returnMe();
+
+        if (me.x == attackingBuilding.x && ((me.y == attackingBuilding.y - 1) || (me.y == attackingBuilding.y + 1))) {
+            return true;
+        }
+
+        if (me.y == attackingBuilding.y && ((me.x == attackingBuilding.x - 1) || (me.x == attackingBuilding.x + 1))) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static long getEnemyDistance() {
 
         Player player = game.result.player1.id == playerID ? game.result.player1 : game.result.player2;
         Player playerOther = game.result.player1.id != playerID ? game.result.player1 : game.result.player2;
@@ -340,9 +373,9 @@ public class Helpers {
     }
 
     public static boolean assessEnemyDanger() {
-        int distance = getEnemyDistanceInSteps();
+        double distance = getEnemyDistance();
 
-        if (distance <= 5) {
+        if (distance <= 4) {
             if (getEnemyAttackingPower() >= 50) {
                 return true;
             }

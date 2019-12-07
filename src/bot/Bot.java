@@ -27,13 +27,13 @@ public class Bot {
     public void changeState(StateEnum stateEnum) {
         switch(stateEnum){
             case BUILD:
-                state = BuildState.getInstance();
+                state = BuildState.getInstance(this);
                 break;
             case ATTACK:
-                state = AttackState.getInstance();
+                state = AttackState.getInstance(this);
                 break;
             case RETREAT:
-                state = RetreatState.getInstance();
+                state = RetreatState.getInstance(this);
                 break;
         }
     }
@@ -50,12 +50,20 @@ public class Bot {
         }
         Helpers.setPlayerID(playerID);
         PathHelper.setPlayerID(playerID);
-        state = StartState.getInstance();
+        state = StartState.getInstance(this);
         while(game.result.winner == null){
             Helpers.SetGame(game);
             PathHelper.setGame(game);
             //decide move
             String action = state.chooseAction();
+            if (state.threat() && !state.equals(StartState.getInstance(this))) {
+                if (Helpers.getEnemyAttackingPower() > Helpers.getMyAttackingPower()) {
+                    this.changeState(StateEnum.RETREAT);
+                }
+                else {
+                    this.changeState(StateEnum.ATTACK);
+                }
+            }
             //do action
             game = gameManager.doAction(playerID, gameID, action);
         }
