@@ -28,11 +28,14 @@ public class Bot {
         } else {
             game = gameManager.gamePlay(playerID, gameID);
         }
+
+        Brain brain = new Brain();
+
         while(game.result.winner == null){
             //decide move
+            String action = brain.getNewAction(game);
             //do action
-            gameManager.doAction(playerID, gameID, "d");
-            //loop
+            game = gameManager.doAction(playerID, gameID, action);
         }
     }
 }
