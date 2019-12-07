@@ -14,6 +14,19 @@ public class Helpers {
 
     public static Game game;
 
+    public static int playerID;
+
+    public static int getPlayerID() {
+        return playerID;
+    }
+
+    public static void setPlayerID(int playerID) {
+        Helpers.playerID = playerID;
+    }
+
+
+
+
     public static void SetGame(Game g){
        game = g;
     }
@@ -68,7 +81,7 @@ public class Helpers {
         }
         return nearestStore;
     }
-    
+
     public static Tile GetNearestStoreForLowerRightPlayer(String storeType){
 
         if(storeType != ItemType.METAL_SHOP && storeType != ItemType.WOOD_SHOP && storeType != ItemType.STONE_SHOP){
@@ -86,6 +99,21 @@ public class Helpers {
             }
         }
         return nearestStore;
+    }
+
+    public static Tile GetNearestItem(String tileType){
+        double minDist = 25, currentDistance;
+        Tile nearestTile = null;
+        ArrayList<Tile> stores = GetStores();
+        for (Tile tile : stores) {
+            currentDistance = RelativeDistance(tile);
+            if( tile.item.GetItemType().equals(tileType) && currentDistance < minDist) {
+                minDist = currentDistance;
+                nearestTile = tile;
+            }
+        }
+        return nearestTile;
+
     }
 
     public static double UpperLeftDistance(Tile tile){
@@ -110,9 +138,7 @@ public class Helpers {
         return Math.sqrt((Math.pow((x-eX), 2))+(Math.pow((y-eY), 2)));
     }
 
-    public static int playerID;
-
-    public boolean nextToShop(String itemType) {
+    public static boolean nextToItem(String itemType) {
        Player player = game.result.player1.id == playerID ? game.result.player1 : game.result.player2;
        Tile[][] tiles = game.result.map.tiles;
 
@@ -134,11 +160,21 @@ public class Helpers {
            if( playerX+1 <= 24 && tiles[playerY][playerX+1] .item.GetItemType().equals(WOOD_SHOP)) return true;
            if( playerY-1 >= 0 && tiles[playerY-1][playerX].item.GetItemType().equals(WOOD_SHOP)) return true;
            if( playerY+1 <= 19 && tiles[playerY+1][playerX] .item.GetItemType().equals(WOOD_SHOP)) return true;
+       }else if (itemType.equals(HOUSE)) {
+           if( playerX-1 >= 0 && tiles[playerY][playerX-1].item.GetItemType().equals(HOUSE)) return true;
+           if( playerX+1 <= 24 && tiles[playerY][playerX+1].item.GetItemType().equals(HOUSE)) return true;
+           if( playerY-1 >= 0 && tiles[playerY-1][playerX].item.GetItemType().equals(HOUSE)) return true;
+           if( playerY+1 <= 19 && tiles[playerY+1][playerX].item.GetItemType().equals(HOUSE)) return true;
+       }else if (itemType.equals(FORTRESS)) {
+           if( playerX-1 >= 0 && tiles[playerY][playerX-1].item.GetItemType().equals(FORTRESS)) return true;
+           if( playerX+1 <= 24 && tiles[playerY][playerX+1].item.GetItemType().equals(FORTRESS)) return true;
+           if( playerY-1 >= 0 && tiles[playerY-1][playerX].item.GetItemType().equals(FORTRESS)) return true;
+           if( playerY+1 <= 19 && tiles[playerY+1][playerX].item.GetItemType().equals(FORTRESS)) return true;
        }
        return false;
     }
 
-    public Direction directionTo(String itemType) {
+    public static Direction directionTo(String itemType) {
         Player player = game.result.player1.id == playerID ? game.result.player1 : game.result.player2;
         Tile[][] tiles = game.result.map.tiles;
 
@@ -160,12 +196,32 @@ public class Helpers {
             if( playerX+1 <= 24 && tiles[playerY][playerX+1].item.GetItemType().equals(WOOD_SHOP)) return Direction.RIGHT;
             if( playerY-1 >= 0 && tiles[playerY-1][playerX].item.GetItemType().equals(WOOD_SHOP)) return Direction.UP;
             if( playerY+1 <= 19 && tiles[playerY+1][playerX] .item.GetItemType().equals(WOOD_SHOP)) return Direction.DOWN;
-        } else {
+        }else if (itemType.equals(HOUSE)) {
+            if( playerX-1 >= 0 && tiles[playerY][playerX-1].item.GetItemType().equals(HOUSE)) return Direction.LEFT;
+            if( playerX+1 <= 24 && tiles[playerY][playerX+1].item.GetItemType().equals(HOUSE)) return Direction.RIGHT;
+            if( playerY-1 >= 0 && tiles[playerY-1][playerX].item.GetItemType().equals(HOUSE)) return Direction.UP;
+            if( playerY+1 <= 19 && tiles[playerY+1][playerX].item.GetItemType().equals(HOUSE)) return Direction.DOWN;
+        }else if (itemType.equals(FORTRESS)) {
+            if( playerX-1 >= 0 && tiles[playerY][playerX-1].item.GetItemType().equals(FORTRESS)) return Direction.LEFT;
+            if( playerX+1 <= 24 && tiles[playerY][playerX+1].item.GetItemType().equals(FORTRESS))return Direction.RIGHT;
+            if( playerY-1 >= 0 && tiles[playerY-1][playerX].item.GetItemType().equals(FORTRESS)) return Direction.UP;
+            if( playerY+1 <= 19 && tiles[playerY+1][playerX].item.GetItemType().equals(FORTRESS)) return Direction.DOWN;
+        }else {
             System.out.println("Greska, nije nigde oko tebe!");
         }
         return Direction.DOWN;
     }
 
+    public static Direction GetFreeTileDirection(){
+        int x =  returnMe().x;
+        int y =  returnMe().y;
+
+        if(x + 1 < 25 && PathHelper.freeField(game.result.map.tiles, y, x+1)) return Direction.RIGHT;
+        else if(x - 1 >= 0 && PathHelper.freeField(game.result.map.tiles, y, x-1)) return Direction.LEFT;
+        else if(y + 1 < 20 && PathHelper.freeField(game.result.map.tiles, y+1, x)) return Direction.DOWN;
+        else if(y - 1 >= 0 && PathHelper.freeField(game.result.map.tiles, y-1, x)) return Direction.UP;
+        return null;
+    }
     public static Player returnMe(){
         return game.result.player1.id == playerID ? game.result.player1 : game.result.player2;
     }
@@ -174,7 +230,7 @@ public class Helpers {
         return game.result.player1.id != playerID ? game.result.player1 : game.result.player2;
     }
 
-    public long getEnemyDistance(){
+    public long getEnemyDistance() {
 
         Player player = game.result.player1.id == playerID ? game.result.player1 : game.result.player2;
         Player playerOther = game.result.player1.id != playerID ? game.result.player1 : game.result.player2;
@@ -185,6 +241,18 @@ public class Helpers {
         int player2_x = playerOther.x;
         int player2_y = playerOther.y;
 
-        return Math.round(Math.sqrt((Math.pow((player1_x-player2_x), 2))+(Math.pow((player1_y-player2_y), 2))));
+        return Math.round(Math.sqrt((Math.pow((player1_x - player2_x), 2)) + (Math.pow((player1_y - player2_y), 2))));
+
+    }
+    public static int GetNumberOfWood(){
+        return returnMe().resources.WOOD;
+    }
+
+
+    public static int GetNumberOfStone(){
+        return returnMe().resources.STONE;
+    }
+    public static int GetNumberOfMetal(){
+        return returnMe().resources.METAL;
     }
 }

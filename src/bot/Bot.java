@@ -46,13 +46,16 @@ public class Bot {
         } else {
             game = gameManager.gamePlay(playerID, gameID);
         }
+        Helpers.setPlayerID(playerID);
+        PathHelper.setPlayerID(playerID);
         state = StartState.getInstance();
         while(game.result.winner == null){
+            Helpers.SetGame(game);
+            PathHelper.setGame(game);
             //decide move
             String action = state.chooseAction();
             //do action
             game = gameManager.doAction(playerID, gameID, action);
-
         }
     }
 }

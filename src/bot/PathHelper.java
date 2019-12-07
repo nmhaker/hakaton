@@ -4,6 +4,7 @@ import commands.Command;
 import commands.MoveCommand;
 import commands.enums.Direction;
 import models.Game;
+import models.Player;
 import models.Tile;
 
 public class PathHelper {    public static  class Coordinate {
@@ -22,8 +23,32 @@ public class PathHelper {    public static  class Coordinate {
     public int y;
     public int dist;
 }
-    public static Command getNextMove(Game game, int cx, int cy, int dstx, int dsty) { //cx, cy -> current x and y, dx and dy -> destination x and y
+    public static Game game;
+    public static int playerID;
 
+    public static int getPlayerID() {
+        return playerID;
+    }
+
+    public static void setPlayerID(int playerID) {
+        PathHelper.playerID = playerID;
+    }
+
+    public static Game getGame() {
+        return game;
+    }
+
+    public static void setGame(Game game) {
+        PathHelper.game = game;
+    }
+
+    public static Player returnMe(){
+        return game.result.player1.id == playerID ? game.result.player1 : game.result.player2;
+    }
+
+    public static Command getNextMove(int dstx, int dsty) { //cx, cy -> current x and y, dx and dy -> destination x and y
+        int cx = returnMe().x;
+        int cy = returnMe().y;
         int dx = cx - dstx;
         int dy = cy - dsty;
         Tile[][] tiles = game.result.map.tiles;
@@ -52,7 +77,7 @@ public class PathHelper {    public static  class Coordinate {
                     return new MoveCommand(Direction.UP);
                 }
                 else {
-                    return yBarrier(game, cx, cy, dx);
+                    return yBarrier(cx, cy, dx);
                 }
             }
             else {
@@ -60,7 +85,7 @@ public class PathHelper {    public static  class Coordinate {
                     return new MoveCommand(Direction.DOWN);
                 }
                 else {
-                    return yBarrier(game, cx, cy, dx);
+                    return yBarrier(cx, cy, dx);
                 }
             }
         }
@@ -68,7 +93,7 @@ public class PathHelper {    public static  class Coordinate {
         return new MoveCommand(Direction.NO_DIRECTION);
     }
 
-    private static boolean freeField(Tile[][] tiles, int y, int x) {
+    public static boolean freeField(Tile[][] tiles, int y, int x) {
         return !tiles[y][x].entity && !tiles[y][x].shop && !tiles[y][x].buildingInProcess && tiles[y][x].item == null;
     }
     private static Command xBarrier(Game game, int cx, int cy, int dy) {
@@ -83,7 +108,7 @@ public class PathHelper {    public static  class Coordinate {
             return new MoveCommand(Direction.LEFT);
     }
 
-    private static Command yBarrier(Game game, int cx, int cy, int dx) {
+    private static Command yBarrier(int cx, int cy, int dx) {
         if (dx > 0 && !game.result.map.tiles[cy][cx - 1].entity)
             return new MoveCommand(Direction.LEFT);
         if (dx < 0 && !game.result.map.tiles[cy +1][cx].entity)

@@ -1,6 +1,18 @@
 package states;
 
 import bot.Helpers;
+import bot.PathHelper;
+import commands.BuildCommand;
+import commands.Command;
+import commands.MoveCommand;
+import commands.TakeResourceCommand;
+import commands.enums.Building;
+import commands.enums.Direction;
+import constants.ItemType;
+import models.Tile;
+import models.items.Item;
+
+import java.nio.file.Path;
 
 public class StartState extends State {
     enum StartSubState {
@@ -33,124 +45,92 @@ public class StartState extends State {
     public String chooseAction() {
         switch(startSubState) {
             case GETWOOD:
-                /*
-                WoodShop woodShop = Helpers.getClosestWoodShop();
-                if(!Helpers.nextTo(ItemType.WOODSHOP)) {
-                    Direction d = Helpers.getNextStep(...);
-                    return new MoveCommand(d);
-                } else {
-                    Direction d = DirectionTo(ItemType.WOODSHOP);
-                    Command ret = new TakeResourceCommand(d);
-                    if(Helpers.numberOfWood == 3) {
-                        startSubState = GETSTONE;
-                    }
-                    return ret;
-                }
-                */
-                break;
-            case GETSTONE:
-                /*
-                StoneShop stoneShop = Helpers.getClosestStoneShop();
-                if(!Helpers.nextTo(ItemType.STONESHOP)) {
-                    Direction d = Helpers.getNextStep(...);
-                    return new MoveCommand(d);
-                } else {
-                    Direction d = DirectionTo(ItemType.STONESHOP);
-                    Command ret = new TakeResourceCommand(d);
-                    if(Helpers.numberOfWood == 3) {
-                        startSubState = BUILDHOUSE;
-                    }
-                    return ret;
-                }
-                */
-                break;
-            case BUILDHOUSE:
-                /* if(Helpers.anyFreeSpotExists()){
-                    Direction d = Hellpers.getFreeSpot();
-                    startSubState = TAKE3STONE;
-                    return new BuildCommand(d);
-                } else {
-                    // move somewhere
-                }
-                */
-                break;
-            case TAKE3STONE:
-                /*
-                if() {
-                    Direction d = DirectionTo(ItemType.STONESHOP);
-                    Command ret = new TakeResourceCommand(d);
-                    if(Helpers.numberOfStone == 2) {
-                        startSubState = BUILDFORTRESS;
-                    }
-                    return ret;
-                } else {
-                    vrati se do STONESHOP;
-                }
-                */
-                break;
-            case BUILDFORTRESS:
-                /*
-                    Direction d = Hellpers.getMyHouse();
-                    startSubState = TAKE1STONE;
-                    return new BuildCommand(d);
 
-                */
-                break;
+                Tile woodShop = Helpers.GetNearestItem(ItemType.WOOD_SHOP);
+                if(!Helpers.nextToItem(ItemType.WOOD_SHOP)) {
+                    Command dd = PathHelper.getNextMove(woodShop.item.x, woodShop.item.y);
+                    return dd.getCommandCode();
+                } else {
+                    Direction d = Helpers.directionTo(ItemType.WOOD_SHOP);
+                    Command ret = new TakeResourceCommand(d);
+                    if(Helpers.GetNumberOfWood() == 3) {
+                        startSubState = StartSubState.GETSTONE;
+                    }
+                    return ret.getCommandCode();
+                }
+            case GETSTONE:
+
+                Tile stoneShop = Helpers.GetNearestItem(ItemType.STONE_SHOP);
+                if(!Helpers.nextToItem(ItemType.STONE_SHOP)) {
+                    Command d = PathHelper.getNextMove(stoneShop.item.x, stoneShop.item.y);
+                    return d.getCommandCode();
+                } else {
+                    Direction d = Helpers.directionTo(ItemType.STONE_SHOP);
+                    Command ret = new TakeResourceCommand(d);
+                    if(Helpers.GetNumberOfStone() == 3) {
+                        startSubState = StartSubState.BUILDHOUSE;
+                    }
+                    return ret.getCommandCode();
+                }
+            case BUILDHOUSE: //TODO chech if you are blocked
+                    Direction freeD = Helpers.GetFreeTileDirection();
+                    startSubState = StartSubState.TAKE3STONE;
+                    return new BuildCommand(freeD, Building.HOUSE).getCommandCode();
+            case TAKE3STONE:
+                    Direction d = Helpers.directionTo(ItemType.STONE_SHOP);
+                    Command ret = new TakeResourceCommand(d);
+                    if(Helpers.GetNumberOfStone() == 2) {
+                        startSubState = StartSubState.BUILDFORTRESS;
+                    }
+                    return ret.getCommandCode();
+            case BUILDFORTRESS:
+                    Direction buildDi = Helpers.directionTo(ItemType.HOUSE);
+                    startSubState = StartSubState.TAKE1STONE;
+                    return new BuildCommand(buildDi, Building.FORTRESS).getCommandCode();
             case TAKE1STONE:
-                /*
-                    Direction d = Hellpers.DirectTo();
-                    startSubState = GETMETAL;
-                    return new TakeResourceCommand(d);
-                */
-                break;
+                    Direction dirc = Helpers.directionTo(ItemType.STONE_SHOP);
+                    startSubState = StartSubState.GETMETAL;
+                    return new TakeResourceCommand(dirc).getCommandCode();
             case GETMETAL:
-                /*
-                MetalShop metalShop = Helpers.getClosestMetalShop();
-                if(!Helpers.nextTo(ItemType.METALSHOP)) {
-                    Direction d = Helpers.getNextStep(...);
-                    return new MoveCommand(d);
+                Tile metalShop = Helpers.GetNearestItem(ItemType.METAL_SHOP);
+                if(!Helpers.nextToItem(ItemType.METAL_SHOP)) {
+                    Command metalDir = PathHelper.getNextMove(metalShop.item.x, metalShop.item.y);
+                    return metalDir.getCommandCode();
                 } else {
-                    Direction d = DirectionTo(ItemType.METALSHOP);
-                    Command ret = new TakeResourceCommand(d);
-                    if(Helpers.numberOfMetal == 2) {
-                        startSubState = BUILDSWORD;
+                    Direction metD = Helpers.directionTo(ItemType.METAL_SHOP);
+                    Command retCo = new TakeResourceCommand(metD);
+                    if(Helpers.GetNumberOfMetal() == 2) {
+                        startSubState = StartSubState.BUILDSWORD;
                     }
-                    return ret;
+                    return retCo.getCommandCode();
                 }
-                */
-                break;
             case BUILDSWORD:
-                /*
-                Fortress fortress = Helpers.getMyFortress();
-                if(!Helpers.nextTo(ItemType.FORTRESS)) {
-                    Direction d = Helpers.getNextStep(...);
-                    return new MoveCommand(d);
+                Tile fortress = Helpers.GetNearestItem(ItemType.FORTRESS);
+                if(!Helpers.nextToItem(ItemType.FORTRESS)) {
+                    Command fortressD = PathHelper.getNextMove(fortress.item.x, fortress.item.y );
+                    return fortressD.getCommandCode();
                 } else {
-                    Direction d = DirectionTo(ItemType.FORTRESS);
-                    Command ret = new BuildCommand(d);
-                    return ret;
+                    Direction fortD = Helpers.directionTo(ItemType.FORTRESS);
+                    Command fortRet = new BuildCommand(fortD, Building.SWORD_FORTRESS);
+                    return fortRet.getCommandCode();
                 }
-                */
-                break;
             case GET4WOOD:
-                /*
-                WoodShop woodShop = Helpers.getClosestWoodShop();
-                if(!Helpers.nextTo(ItemType.WOODSHOP)) {
-                    Direction d = Helpers.getNextStep(...);
-                    return new MoveCommand(d);
+                Tile woodShop1 = Helpers.GetNearestItem(ItemType.WOOD_SHOP);
+                if(!Helpers.nextToItem(ItemType.WOOD_SHOP)) {
+                    Command woodD1 = PathHelper.getNextMove(woodShop1.item.x, woodShop1.item.y);
+                    return woodD1.getCommandCode();
                 } else {
-                    Direction d = DirectionTo(ItemType.WOODSHOP);
-                    Command ret = new TakeResourceCommand(d);
-                    if(Helpers.numberOfWood == 3) {
-                        startSubState = BUILDNEWHOUSE;
+                    Direction woodDir2 = Helpers.directionTo(ItemType.WOOD_SHOP);
+                    Command woodDirRet2 = new TakeResourceCommand(woodDir2);
+                    if(Helpers.GetNumberOfWood() == 3) {
+                        startSubState = StartSubState.BUILDNEWHOUSE;
                     }
-                    return ret;
+                    return woodDirRet2.getCommandCode();
                 }
-                */
-                break;
             case BUILDNEWHOUSE:
                 // TODO:
-                break;
+                Direction tmp = Helpers.GetFreeTileDirection();
+                return new MoveCommand(tmp).getCommandCode();
         }
         return null;
     }
