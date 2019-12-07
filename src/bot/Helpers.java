@@ -385,6 +385,14 @@ public class Helpers {
         return 0;
     }
 
+    public static Integer GenNumOfWeapons(){
+        Player p = returnMe();
+        int num = 0;
+        if(p.weapon1 != null)  num++;
+        if(p.weapon2 != null) num++;
+
+        return num;
+    }
     public static boolean assessEnemyDanger() {
         double distance = getEnemyDistance();
 
