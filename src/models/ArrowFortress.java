@@ -3,7 +3,7 @@ package models;
 import constants.ItemType;
 import constants.StringType;
 
-public class ArrowFortress extends Item {
+public class ArrowFortress {
 
     public Integer id;
 

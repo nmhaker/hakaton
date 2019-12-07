@@ -1,9 +1,8 @@
 package models.shops;
 
 import constants.ItemType;
-import models.Item;
 
-public class WoodShop extends Item {
+public class WoodShop {
 
     public Integer x;
 
