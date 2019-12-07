@@ -151,4 +151,12 @@ public class Helpers {
         }
         return Direction.DOWN;
     }
+
+    public Player returnMe(){
+        return game.result.player1.id == playerID ? game.result.player1 : game.result.player2;
+    }
+
+    public Player returnEnemy(){
+        return game.result.player1.id != playerID ? game.result.player1 : game.result.player2;
+    }
 }
