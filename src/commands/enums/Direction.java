@@ -1,5 +1,7 @@
 package commands.enums;
 
+import commands.Command;
+
 public enum Direction {
     UP,
     DOWN,
@@ -8,5 +10,6 @@ public enum Direction {
     UPPER_LEFT,
     UPPER_RIGHT,
     LOWER_LEFT,
-    LOWER_RIGHT
+    LOWER_RIGHT,
+    NO_DIRECTION
 }

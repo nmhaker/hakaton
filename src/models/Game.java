@@ -9,4 +9,8 @@ public class Game {
 
     public String message;
 
+    public boolean tileFree(int x, int y) {
+        return !result.map.tiles[x][y].entity;
+    }
+
 }

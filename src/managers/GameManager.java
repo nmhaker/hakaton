@@ -1,6 +1,7 @@
 package managers;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import models.Game;
@@ -17,7 +18,12 @@ public class GameManager {
 
     public GameManager(String url) {
         _url = url;
-        httpClient = new OkHttpClient.Builder().callTimeout(400, TimeUnit.SECONDS).build();
+        httpClient = new OkHttpClient.Builder()
+                .connectTimeout(400, TimeUnit.SECONDS)
+                .callTimeout(400, TimeUnit.SECONDS)
+                .readTimeout(400, TimeUnit.SECONDS)
+                .writeTimeout(400, TimeUnit.SECONDS)
+                .build();
     }
 
     public Game trainRandom(Integer playerId) {
@@ -103,6 +109,7 @@ public class GameManager {
         ObjectMapper objectMapper = new ObjectMapper();
         Game game ;
         try {
+            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
             game = objectMapper.readValue(stateJson, Game.class);
             return game;
         } catch (JsonProcessingException e) {
