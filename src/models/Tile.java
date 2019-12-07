@@ -1,5 +1,7 @@
 package models;
 
+import models.items.Item;
+
 public class Tile {
 
     public Item item;

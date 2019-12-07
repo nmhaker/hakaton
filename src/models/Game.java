@@ -7,6 +7,6 @@ public class Game {
 
     public Integer playerIndex;
 
-
+    public String message;
 
 }

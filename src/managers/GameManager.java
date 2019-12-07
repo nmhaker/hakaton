@@ -1,6 +1,8 @@
 package managers;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import models.Game;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -97,8 +99,14 @@ public class GameManager {
         }
     }
 
-    private Game deserializeResponse(String stateJson) {
-        //TODO: return deserialized response
-        return new Game();
+    private Game deserializeResponse(String stateJson) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Game game ;
+        try {
+            game = objectMapper.readValue(stateJson, Game.class);
+            return game;
+        } catch (JsonProcessingException e) {
+            throw e;
+        }
     }
 }
