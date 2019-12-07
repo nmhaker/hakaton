@@ -7,22 +7,32 @@ import models.Game;
 import models.Player;
 import models.Tile;
 
-public class PathHelper {    public static  class Coordinate {
-    public Coordinate(int x, int y) {
-        this.x = x;
-        this.y = y;
-        dist = 0;
-    }
-    public Coordinate(int x, int y, int dist) {
-        this.x = x;
-        this.y = y;
-        this.dist = dist;
+import java.util.Stack;
+
+public class PathHelper {
+    public static  class Coordinate {
+        public Coordinate(int x, int y) {
+            this.x = x;
+            this.y = y;
+            dist = 0;
+        }
+
+        public Coordinate(int x, int y, int dist) {
+            this.x = x;
+            this.y = y;
+            this.dist = dist;
+        }
+
+        public int x;
+        public int y;
+        public int dist;
     }
 
-    public int x;
-    public int y;
-    public int dist;
-}
+    public static Stack<Direction> moveHistory = new Stack<>();
+    public static Stack<Direction> recoveryStack = new Stack<>();
+
+    public static boolean barrierAvoidance = false;
+
     public static Game game;
     public static int playerID;
 
@@ -51,73 +61,108 @@ public class PathHelper {    public static  class Coordinate {
         int cy = returnMe().y;
         int dx = cx - dstx;
         int dy = cy - dsty;
+        MoveCommand command = null;
         Tile[][] tiles = game.result.map.tiles;
-        if (dx != 0) {
+        Direction lastMove = moveHistory.empty() ? null : moveHistory.peek();
+        Direction lastMoveInv =lastMove == Direction.LEFT ? Direction.RIGHT : lastMove == Direction.RIGHT ? Direction.LEFT : lastMove == Direction.UP ? Direction.DOWN : Direction.UP;
+       if (dx != 0) {
             if (dx > 0) {
-                if (freeField(tiles, cy,cx - 1)) {
-                    return new MoveCommand(Direction.LEFT);
+                if (freeField(tiles, cy,cx - 1) && (recoveryStack.empty() || recoveryStack.peek() != Direction.LEFT) && (moveHistory.empty() || lastMoveInv != Direction.LEFT)) {
+                    barrierAvoidance = false;
+                    recoveryStack.clear();
+                    command = new MoveCommand(Direction.LEFT);
                 }
                 else {
-                    return xBarrier(game, cx, cy, dy);
+                    command = xBarrier(game, cx, cy, dy, lastMoveInv);
                 }
             }
             else {
-                if (freeField(tiles, cy,cx + 1)) {
-                    return new MoveCommand(Direction.RIGHT);
+                if (freeField(tiles, cy,cx + 1)&& (recoveryStack.empty() || recoveryStack.peek() != Direction.RIGHT)&& (moveHistory.empty() || lastMoveInv != Direction.RIGHT)) {
+                    barrierAvoidance = false;
+                    recoveryStack.clear();
+                    command = new MoveCommand(Direction.RIGHT);
                 }
                 else {
-                    return xBarrier(game, cx, cy, dy);
+                    command = xBarrier(game, cx, cy, dy, lastMoveInv);
                 }
             }
         }
+        else {
+           if (dy != 0) {
+               if (dy > 0) {
+                   if (freeField(tiles, cy - 1, cx) && (recoveryStack.empty() || recoveryStack.peek() != Direction.UP) && (moveHistory.empty() || lastMoveInv != Direction.UP)) {
+                       barrierAvoidance = false;
+                       recoveryStack.clear();
+                       command = new MoveCommand(Direction.UP);
+                   } else {
+                       command = yBarrier(game, cx, cy, dx, lastMoveInv);
+                   }
+               } else {
+                   if (freeField(tiles, cy + 1, cx) && (recoveryStack.empty() || recoveryStack.peek() != Direction.DOWN) && (moveHistory.empty() || lastMoveInv != Direction.DOWN)) {
+                       barrierAvoidance = false;
+                       recoveryStack.clear();
+                       command = new MoveCommand(Direction.DOWN);
+                   } else {
+                       command = yBarrier(game, cx, cy, dx, lastMoveInv);
+                   }
+               }
+           }
+       }
 
-        if (dy != 0) {
-            if (dy > 0) {
-                if (freeField(tiles, cy - 1, cx)) {
-                    return new MoveCommand(Direction.UP);
-                }
-                else {
-                    return yBarrier(cx, cy, dx);
-                }
-            }
-            else {
-                if (freeField(tiles,cy + 1,cx)) {
-                    return new MoveCommand(Direction.DOWN);
-                }
-                else {
-                    return yBarrier(cx, cy, dx);
-                }
-            }
-        }
+        if (command == null)
+            return new MoveCommand(Direction.NO_DIRECTION);
 
-        return new MoveCommand(Direction.NO_DIRECTION);
+        if (!barrierAvoidance) moveHistory.push(command.getDirection());
+        return command;
     }
 
     public static boolean freeField(Tile[][] tiles, int y, int x) {
         Player enemy = Helpers.returnEnemy();
         return !tiles[y][x].entity && !tiles[y][x].shop && !tiles[y][x].buildingInProcess && tiles[y][x].item == null && (enemy.y != y || enemy.x != x);
     }
-    private static Command xBarrier(Game game, int cx, int cy, int dy) {
-        if (dy > 0 && !game.result.map.tiles[cy-1][cx].entity)
+    private static MoveCommand xBarrier(Game game, int cx, int cy, int dy, Direction invDirection) {
+        if (cy != 0 && freeField(game.result.map.tiles, cy-1, cx) && Direction.UP != invDirection) {
+            barrierAvoidance = false;
+            recoveryStack.clear();
             return new MoveCommand(Direction.UP);
-        if (dy < 0 && !game.result.map.tiles[cy+1][cx].entity)
+        }
+        if (cy != 19 && freeField(game.result.map.tiles, cy+1, cx) && Direction.DOWN != invDirection) {
+            barrierAvoidance = false;
+            recoveryStack.clear();
             return new MoveCommand(Direction.DOWN);
+        }
 
-        if (game.result.map.tiles[cy][cx+1].entity)
-            return new MoveCommand(Direction.RIGHT);
-        else
-            return new MoveCommand(Direction.LEFT);
+        barrierAvoidance = true;
+        Direction rev = moveHistory.pop();
+        recoveryStack.push(rev);
+
+        return new MoveCommand(rev == Direction.LEFT ? Direction.RIGHT : rev == Direction.RIGHT ? Direction.LEFT : rev == Direction.UP ? Direction.UP : Direction.DOWN);
+//        if (game.result.map.tiles[cy][cx+1].entity)
+//            return new MoveCommand(Direction.RIGHT);
+//        else
+//            return new MoveCommand(Direction.LEFT);
     }
 
-    private static Command yBarrier(int cx, int cy, int dx) {
-        if (dx > 0 && !game.result.map.tiles[cy][cx - 1].entity)
+    private static MoveCommand yBarrier(Game game, int cx, int cy, int dx, Direction invDirection) {
+        if (dx != 0 && freeField(game.result.map.tiles, cy, cx - 1) && Direction.LEFT != invDirection) {
+            barrierAvoidance = false;
+            recoveryStack.clear();
             return new MoveCommand(Direction.LEFT);
-        if (dx < 0 && !game.result.map.tiles[cy +1][cx].entity)
+        }
+        if (dx != 24 && !game.result.map.tiles[cy +1][cx].entity && Direction.RIGHT != invDirection) {
+            barrierAvoidance = false;
+            recoveryStack.clear();
             return new MoveCommand(Direction.RIGHT);
+        }
+        barrierAvoidance = true;
+        Direction rev = moveHistory.pop();
+        recoveryStack.push(rev);
 
-        if (game.result.map.tiles[cy+1][cx].entity)
-            return new MoveCommand(Direction.DOWN);
-        else
-            return new MoveCommand(Direction.UP);
+        return new MoveCommand(rev == Direction.LEFT ? Direction.RIGHT : rev == Direction.RIGHT ? Direction.LEFT : rev == Direction.UP ? Direction.UP : Direction.DOWN);
+//
+//        if (game.result.map.tiles[cy+1][cx].entity)
+//            return new MoveCommand(Direction.DOWN);
+//        else
+//            return new MoveCommand(Direction.UP);
     }
 }
