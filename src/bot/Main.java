@@ -1,106 +1,23 @@
 package bot;
 
-import managers.GameManager;
-import models.Game;
-
 public class Main {
 
-    private static void startTrain(String playerId) {
+    private static void startTrain(String playerId, String url) {
         Integer pid = Integer.parseInt(playerId);
-        GameManager manager = new GameManager("http://localhost:9080");
-        Game state = manager.trainRandom(pid);
-        Integer gameId = state.result.id;
-        while (true) {
-            if (pid == 0) {
-                manager.doAction(pid,gameId, "s");
-                manager.doAction(pid,gameId, "s");
-                manager.doAction(pid,gameId, "s");
-                manager.doAction(pid,gameId, "s");
-                manager.doAction(pid,gameId, "d");
-                manager.doAction(pid,gameId, "d");
-                manager.doAction(pid,gameId, "d");
-                manager.doAction(pid,gameId, "d");
-                manager.doAction(pid,gameId, "w");
-                manager.doAction(pid,gameId, "w");
-                manager.doAction(pid,gameId, "w");
-                manager.doAction(pid,gameId, "w");
-                manager.doAction(pid,gameId, "a");
-                manager.doAction(pid,gameId, "a");
-                manager.doAction(pid,gameId, "a");
-                manager.doAction(pid,gameId, "a");
-            }
-
-            if (pid == 1) {
-                manager.doAction(pid,gameId, "w");
-                manager.doAction(pid,gameId, "w");
-                manager.doAction(pid,gameId, "w");
-                manager.doAction(pid,gameId, "w");
-                manager.doAction(pid,gameId, "a");
-                manager.doAction(pid,gameId, "a");
-                manager.doAction(pid,gameId, "a");
-                manager.doAction(pid,gameId, "a");
-                manager.doAction(pid,gameId, "s");
-                manager.doAction(pid,gameId, "s");
-                manager.doAction(pid,gameId, "s");
-                manager.doAction(pid,gameId, "s");
-                manager.doAction(pid,gameId, "d");
-                manager.doAction(pid,gameId, "d");
-                manager.doAction(pid,gameId, "d");
-                manager.doAction(pid,gameId, "d");
-
-            }
-        }
+        Bot bot = new Bot(url, pid);
+        bot.run();
     }
 
 
-    private static void joinGame(String playerId, String gameId) {
+    private static void joinGame(String playerId, String gameId, String url) {
         Integer pid = Integer.parseInt(playerId);
         Integer gid = Integer.parseInt(gameId);
-        GameManager manager = new GameManager("http://localhost:9080");
-        Game state = manager.gamePlay(pid, gid);
-        while (true) {
-            if (pid == 0) {
-                manager.doAction(pid,gid, "s");
-                manager.doAction(pid,gid, "s");
-                manager.doAction(pid,gid, "s");
-                manager.doAction(pid,gid, "s");
-                manager.doAction(pid,gid, "d");
-                manager.doAction(pid,gid, "d");
-                manager.doAction(pid,gid, "d");
-                manager.doAction(pid,gid, "d");
-                manager.doAction(pid,gid, "w");
-                manager.doAction(pid,gid, "w");
-                manager.doAction(pid,gid, "w");
-                manager.doAction(pid,gid, "w");
-                manager.doAction(pid,gid, "a");
-                manager.doAction(pid,gid, "a");
-                manager.doAction(pid,gid, "a");
-                manager.doAction(pid,gid, "a");
-            }
-
-            if (pid == 1) {
-                manager.doAction(pid,gid, "w");
-                manager.doAction(pid,gid, "w");
-                manager.doAction(pid,gid, "w");
-                manager.doAction(pid,gid, "w");
-                manager.doAction(pid,gid, "a");
-                manager.doAction(pid,gid, "a");
-                manager.doAction(pid,gid, "a");
-                manager.doAction(pid,gid, "a");
-                manager.doAction(pid,gid, "s");
-                manager.doAction(pid,gid, "s");
-                manager.doAction(pid,gid, "s");
-                manager.doAction(pid,gid, "s");
-                manager.doAction(pid,gid, "d");
-                manager.doAction(pid,gid, "d");
-                manager.doAction(pid,gid, "d");
-                manager.doAction(pid,gid, "d");
-
-            }
-        }
+        Bot bot = new Bot(url, pid, gid);
+        bot.run();
     }
 
     public static void main (String args[]) {
-        joinGame(args[0], args[1]);
+        String url = "http://localhost:9080";
+        joinGame(args[0], args[1], url);
     }
 }
