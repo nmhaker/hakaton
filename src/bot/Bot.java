@@ -14,11 +14,13 @@ public class Bot {
     public Bot(String url, int playerID) {
         gameManager = new GameManager(url);
         this.playerID = playerID;
+        Helpers.playerID = playerID;
     }
 
     public Bot(String url, int playerID, int gameID) {
         gameManager = new GameManager(url);
         this.playerID = playerID;
+        Helpers.playerID = playerID;
         this.gameID = gameID;
     }
 

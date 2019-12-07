@@ -1,12 +1,14 @@
 package bot;
 
+import java.util.ArrayList;
 import constants.ItemType;
 import constants.MapSize;
 import models.Game;
 import models.Tile;
 import models.items.Item;
-
-import java.util.ArrayList;
+import models.Player;
+import commands.enums.Direction;
+import static constants.ItemType.*;
 
 public class Helpers {
 
@@ -92,5 +94,61 @@ public class Helpers {
 
     public static double LowerRightDistance(Tile tile){
         return Math.sqrt((Math.pow((MapSize.HEIGHT_LAST_INDEX -tile.item.x), 2))+(Math.pow((MapSize.WIDTH_LAST_INDEX-tile.item.x), 2)));
+    }
+
+    public static int playerID;
+
+    public boolean nextToShop(String itemType) {
+       Player player = game.result.player1.id == playerID ? game.result.player1 : game.result.player2;
+       Tile[][] tiles = game.result.map.tiles;
+
+       int playerX = player.x;
+       int playerY = player.y;
+
+       if (itemType.equals(METAL_SHOP)) {
+           if( playerX-1 >= 0 && tiles[playerX-1][playerY].item.itemType.equals(METAL_SHOP)) return true;
+           if( playerX+1 <= 24 && tiles[playerX+1][playerY].item.itemType.equals(METAL_SHOP)) return true;
+           if( playerY-1 >= 0 && tiles[playerX][playerY-1].item.itemType.equals(METAL_SHOP)) return true;
+           if( playerY+1 <= 19 && tiles[playerX][playerY+1].item.itemType.equals(METAL_SHOP)) return true;
+       } else if (itemType.equals(STONE_SHOP)) {
+           if( playerX-1 >= 0 && tiles[playerX-1][playerY].item.itemType.equals(STONE_SHOP)) return true;
+           if( playerX+1 <= 24 && tiles[playerX+1][playerY].item.itemType.equals(STONE_SHOP)) return true;
+           if( playerY-1 >= 0 && tiles[playerX][playerY-1].item.itemType.equals(STONE_SHOP)) return true;
+           if( playerY+1 <= 19 && tiles[playerX][playerY+1].item.itemType.equals(STONE_SHOP)) return true;
+       } else if (itemType.equals(WOOD_SHOP)) {
+           if( playerX-1 >= 0 && tiles[playerX-1][playerY].item.itemType.equals(WOOD_SHOP)) return true;
+           if( playerX+1 <= 24 && tiles[playerX+1][playerY].item.itemType.equals(WOOD_SHOP)) return true;
+           if( playerY-1 >= 0 && tiles[playerX][playerY-1].item.itemType.equals(WOOD_SHOP)) return true;
+           if( playerY+1 <= 19 && tiles[playerX][playerY+1].item.itemType.equals(WOOD_SHOP)) return true;
+       }
+       return false;
+    }
+
+    public Direction directionTo(String itemType) {
+        Player player = game.result.player1.id == playerID ? game.result.player1 : game.result.player2;
+        Tile[][] tiles = game.result.map.tiles;
+
+        int playerX = player.x;
+        int playerY = player.y;
+
+        if (itemType.equals(METAL_SHOP)) {
+            if( playerX-1 >= 0 && tiles[playerX-1][playerY].item.itemType.equals(METAL_SHOP)) return Direction.LEFT;
+            if( playerX+1 <= 24 && tiles[playerX+1][playerY].item.itemType.equals(METAL_SHOP)) return Direction.RIGHT;
+            if( playerY-1 >= 0 && tiles[playerX][playerY-1].item.itemType.equals(METAL_SHOP)) return Direction.UP;
+            if( playerY+1 <= 19 && tiles[playerX][playerY+1].item.itemType.equals(METAL_SHOP)) return Direction.DOWN;
+        } else if (itemType.equals(STONE_SHOP)) {
+            if( playerX-1 >= 0 && tiles[playerX-1][playerY].item.itemType.equals(STONE_SHOP)) return Direction.LEFT;
+            if( playerX+1 <= 24 && tiles[playerX+1][playerY].item.itemType.equals(STONE_SHOP)) return  Direction.RIGHT;
+            if( playerY-1 >= 0 && tiles[playerX][playerY-1].item.itemType.equals(STONE_SHOP)) return Direction.UP;
+            if( playerY+1 <= 19 && tiles[playerX][playerY+1].item.itemType.equals(STONE_SHOP)) return Direction.DOWN;
+        } else if (itemType.equals(WOOD_SHOP)) {
+            if( playerX-1 >= 0 && tiles[playerX-1][playerY].item.itemType.equals(WOOD_SHOP)) return Direction.LEFT;
+            if( playerX+1 <= 24 && tiles[playerX+1][playerY].item.itemType.equals(WOOD_SHOP)) return Direction.RIGHT;
+            if( playerY-1 >= 0 && tiles[playerX][playerY-1].item.itemType.equals(WOOD_SHOP)) return Direction.UP;
+            if( playerY+1 <= 19 && tiles[playerX][playerY+1].item.itemType.equals(WOOD_SHOP)) return Direction.DOWN;
+        } else {
+            System.out.println("Greska, nije nigde oko tebe!");
+        }
+        return Direction.DOWN;
     }
 }
