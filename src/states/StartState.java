@@ -16,21 +16,33 @@ import java.nio.file.Path;
 
 public class StartState extends State {
     enum StartSubState {
+        GETWOODINITIAL,
         GETWOOD,
+        GETSTONEINITIAL,
         GETSTONE,
         BUILDHOUSE,
         TAKE3STONE,
         BUILDFORTRESS,
         TAKE1STONE,
+        GETMETALINITIAL,
         GETMETAL,
+        GET1WOODINITIAL,
+        GET1WOOD,
         BUILDSWORD,
+        GET4WOODINITIAL,
         GET4WOOD,
-        BUILDNEWHOUSE
+        BUILDNEWHOUSE,
+        LOOPSEAMLESS
     }
 
-    StartSubState startSubState = StartSubState.GETWOOD;
+    StartSubState startSubState = StartSubState.GETWOODINITIAL;
 
     private static StartState start_state = null;
+    private Tile woodShop;
+    private Tile stoneShop;
+    private Tile metalShop;
+    private Tile woodShop1;
+
     private StartState() {}
 
     public static StartState getInstance()
@@ -43,10 +55,12 @@ public class StartState extends State {
 
     @Override
     public String chooseAction() {
-        switch(startSubState) {
-            case GETWOOD:
 
-                Tile woodShop = Helpers.GetNearestItem(ItemType.WOOD_SHOP);
+        switch(startSubState) {
+            case GETWOODINITIAL:
+                 woodShop = Helpers.GetNearestItem(ItemType.WOOD_SHOP);
+                 startSubState = StartSubState.GETWOOD;
+            case GETWOOD:
                 if(!Helpers.nextToItem(ItemType.WOOD_SHOP)) {
                     Command dd = PathHelper.getNextMove(woodShop.item.x, woodShop.item.y);
                     return dd.getCommandCode();
@@ -54,22 +68,22 @@ public class StartState extends State {
                     Direction d = Helpers.directionTo(ItemType.WOOD_SHOP);
                     Command ret = new TakeResourceCommand(d);
                     if(Helpers.GetNumberOfWood() == 3) {
-                        startSubState = StartSubState.GETSTONE;
+                        startSubState = StartSubState.GETSTONEINITIAL;
                     }
                     return ret.getCommandCode();
                 }
-            case GETSTONE:
 
-                Tile stoneShop = Helpers.GetNearestItem(ItemType.STONE_SHOP);
+            case GETSTONEINITIAL:
+                stoneShop = Helpers.GetNearestItem(ItemType.STONE_SHOP);
+                startSubState = StartSubState.GETSTONE;
+            case GETSTONE:
                 if(!Helpers.nextToItem(ItemType.STONE_SHOP)) {
                     Command d = PathHelper.getNextMove(stoneShop.item.x, stoneShop.item.y);
                     return d.getCommandCode();
                 } else {
                     Direction d = Helpers.directionTo(ItemType.STONE_SHOP);
                     Command ret = new TakeResourceCommand(d);
-                    if(Helpers.GetNumberOfStone() == 3) {
-                        startSubState = StartSubState.BUILDHOUSE;
-                    }
+                    startSubState = StartSubState.BUILDHOUSE;
                     return ret.getCommandCode();
                 }
             case BUILDHOUSE: //TODO chech if you are blocked
@@ -89,10 +103,12 @@ public class StartState extends State {
                     return new BuildCommand(buildDi, Building.FORTRESS).getCommandCode();
             case TAKE1STONE:
                     Direction dirc = Helpers.directionTo(ItemType.STONE_SHOP);
-                    startSubState = StartSubState.GETMETAL;
+                    startSubState = StartSubState.GETMETALINITIAL;
                     return new TakeResourceCommand(dirc).getCommandCode();
+            case GETMETALINITIAL:
+                metalShop = Helpers.GetNearestItem(ItemType.METAL_SHOP);
+                startSubState = StartSubState.GETMETAL;
             case GETMETAL:
-                Tile metalShop = Helpers.GetNearestItem(ItemType.METAL_SHOP);
                 if(!Helpers.nextToItem(ItemType.METAL_SHOP)) {
                     Command metalDir = PathHelper.getNextMove(metalShop.item.x, metalShop.item.y);
                     return metalDir.getCommandCode();
@@ -100,9 +116,22 @@ public class StartState extends State {
                     Direction metD = Helpers.directionTo(ItemType.METAL_SHOP);
                     Command retCo = new TakeResourceCommand(metD);
                     if(Helpers.GetNumberOfMetal() == 2) {
-                        startSubState = StartSubState.BUILDSWORD;
+                        startSubState = StartSubState.GET1WOODINITIAL;
                     }
                     return retCo.getCommandCode();
+                }
+            case GET1WOODINITIAL:
+                woodShop = Helpers.GetNearestItem(ItemType.WOOD_SHOP);
+                startSubState = StartSubState.GET1WOOD;
+            case GET1WOOD:
+                if(!Helpers.nextToItem(ItemType.WOOD_SHOP)) {
+                    Command dd = PathHelper.getNextMove(woodShop.item.x, woodShop.item.y);
+                    return dd.getCommandCode();
+                } else {
+                    Direction d1 = Helpers.directionTo(ItemType.WOOD_SHOP);
+                    Command ret1 = new TakeResourceCommand(d1);
+                    startSubState = StartSubState.BUILDSWORD;
+                    return ret1.getCommandCode();
                 }
             case BUILDSWORD:
                 Tile fortress = Helpers.GetNearestItem(ItemType.FORTRESS);
@@ -112,10 +141,13 @@ public class StartState extends State {
                 } else {
                     Direction fortD = Helpers.directionTo(ItemType.FORTRESS);
                     Command fortRet = new BuildCommand(fortD, Building.SWORD_FORTRESS);
+                    startSubState = StartSubState.GET4WOODINITIAL;
                     return fortRet.getCommandCode();
                 }
+            case GET4WOODINITIAL:
+                woodShop1 = Helpers.GetNearestItem(ItemType.WOOD_SHOP);
+                startSubState = StartSubState.GET4WOOD;
             case GET4WOOD:
-                Tile woodShop1 = Helpers.GetNearestItem(ItemType.WOOD_SHOP);
                 if(!Helpers.nextToItem(ItemType.WOOD_SHOP)) {
                     Command woodD1 = PathHelper.getNextMove(woodShop1.item.x, woodShop1.item.y);
                     return woodD1.getCommandCode();
@@ -128,7 +160,10 @@ public class StartState extends State {
                     return woodDirRet2.getCommandCode();
                 }
             case BUILDNEWHOUSE:
-                // TODO:
+                Direction freeD2 = Helpers.GetFreeTileDirection();
+                startSubState = StartSubState.LOOPSEAMLESS;
+                return new BuildCommand(freeD2, Building.HOUSE).getCommandCode();
+            case LOOPSEAMLESS:
                 Direction tmp = Helpers.GetFreeTileDirection();
                 return new MoveCommand(tmp).getCommandCode();
         }

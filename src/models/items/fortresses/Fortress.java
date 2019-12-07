@@ -9,7 +9,15 @@ public class Fortress extends Item {
 
     public Integer health;
 
+    public Integer timeSinceBuilding;
+
+    public Integer numWeapons;
+
+    public Integer timeSinceMakeWeapon;
+
     public String itemType = ItemType.FORTRESS;
+
+    public String stringType;
 
     public String GetItemType(){
         return itemType;

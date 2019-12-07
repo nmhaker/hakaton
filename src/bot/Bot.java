@@ -42,9 +42,11 @@ public class Bot {
         Game game = null;
         if(gameID == null){
             game = gameManager.trainRandom(playerID);
+            while(!game.success) game = gameManager.trainRandom(playerID);
             gameID = game.result.id;
         } else {
             game = gameManager.gamePlay(playerID, gameID);
+            while(!game.success) game = gameManager.gamePlay(playerID, gameID);
         }
         Helpers.setPlayerID(playerID);
         PathHelper.setPlayerID(playerID);
